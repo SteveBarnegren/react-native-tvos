@@ -84,6 +84,6 @@ export type TVViewProps = $ReadOnly<{|
   destinations?: ?(Object[]),
   enabled?: boolean,
   autofocus?: boolean,
-  preferSpacialNavigation?: boolean,
+  preserveFocusOnScreenChange?: boolean,
   safePadding?: string | null,
 |}>;

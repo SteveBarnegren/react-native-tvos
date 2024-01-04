@@ -313,7 +313,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
     // the last focused element and redirects the focus to it whenever focus comes back.
     previouslyFocusedItem = context.previouslyFocusedItem;
 
-    if (_preferSpacialNavigation && [context.previouslyFocusedView rnsScreenView] == [context.nextFocusedView rnsScreenView]) {
+    if (_preserveFocusOnScreenChange && [context.previouslyFocusedView rnsScreenView] == [context.nextFocusedView rnsScreenView]) {
         previouslyFocusedItem = nil;
     }
     [self handleFocusGuide];
@@ -493,11 +493,10 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
   }
 }
 
-- (void)setPreferSpacialNavigation:(BOOL)preferSpacialNavigation
+- (void)setPreserveFocusOnScreenChange:(BOOL)preserveFocusOnScreenChange
 {
-  NSLog(@"SB:: Prefer Spacial Navigation %@", (preferSpacialNavigation ? @"YES" : @"NO"));
-  if (_preferSpacialNavigation != preferSpacialNavigation) {
-    _preferSpacialNavigation = preferSpacialNavigation;
+  if (_preserveFocusOnScreenChange != preserveFocusOnScreenChange) {
+    _preserveFocusOnScreenChange = preserveFocusOnScreenChange;
     [self handleFocusGuide];
   }
 }
@@ -536,7 +535,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
     // We also add `self` as the second option in case `previouslyFocusedItem` becomes unreachable (e.g gets detached).
     // `self` helps redirecting focus to the first focusable element in that case.
     [self addFocusGuide:@[previouslyFocusedItem, self]];
-  } else if (_autoFocus && !_preferSpacialNavigation) {
+  } else if (_autoFocus && !_preserveFocusOnScreenChange) {
     [self addFocusGuide:@[self]];
   } else {
     // Then there's no need to have `focusGuide`, remove it to prevent potential bugs.

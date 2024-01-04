@@ -46,7 +46,7 @@
  * Auto focus
  */
 @property (nonatomic, assign) BOOL autoFocus;
-@property (nonatomic, assign) BOOL preferSpacialNavigation;
+@property (nonatomic, assign) BOOL preserveFocusOnScreenChange;
 
 @property (nonatomic, assign) BOOL trapFocusUp;
 @property (nonatomic, assign) BOOL trapFocusDown;
