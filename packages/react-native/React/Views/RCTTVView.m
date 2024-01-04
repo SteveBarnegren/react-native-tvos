@@ -302,30 +302,19 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 {
-  [self condPrint:@"SB:: ******************* (%p)", self];
-
   if (context.previouslyFocusedView == context.nextFocusedView) {
     return;
   }
 
-  [self condPrint:@"SB:: autofocus %@", (self.autoFocus ? @"YES" : @"NO")];
-  [self condPrint:@"SB:: focus guide nil %@", (self.focusGuide == nil ? @"YES" : @"NO")];
-  [self condPrint:@"SB:: previously focused item is nil %@", (context.previouslyFocusedItem == nil ? @"YES" : @"NO")];
-  [self condPrint:@"SB:: next focused item is nil %@", (context.nextFocusedItem == nil ? @"YES" : @"NO")];
   if (_autoFocus && context.previouslyFocusedItem != nil && [context.previouslyFocusedView isDescendantOfView:self]) {
     // Whenever focus leaves the container, `nextFocusedView` is the destination, the item outside the container.
     // So, `previouslyFocusedItem` is always the last focused child of `TVFocusGuide`.
     // We should update `preferredFocusEnvironments` in this case to make sure `FocusGuide` remembers
     // the last focused element and redirects the focus to it whenever focus comes back.
-    [self condPrint:@"SB:: ---------------"];
     previouslyFocusedItem = context.previouslyFocusedItem;
-    [self condPrint:@"SB:: -> Set previously focused item"];
 
     if (_preferSpacialNavigation && [context.previouslyFocusedView rnsScreenView] == [context.nextFocusedView rnsScreenView]) {
-        [self condPrint:@"SB:: -> Remove previously focused item"];
         previouslyFocusedItem = nil;
-    } else {
-        [self condPrint:@"SB:: -> Keep previously focused item"];
     }
     [self handleFocusGuide];
   }
@@ -345,19 +334,6 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
     } completion:^(void){}];
     [self resignFirstResponder];
   }
-}
-
-- (void)condPrint:(NSString *)format, ... {
-    if (_autoFocus) {
-        va_list args;
-        va_start(args, format);
-
-        NSString *formattedString = [[NSString alloc] initWithFormat:format arguments:args];
-
-        va_end(args);
-
-        printf("%s\n", [formattedString UTF8String]);
-    }
 }
 
 // In tvOS, to support directional focus APIs, we add a UIFocusGuide for each
