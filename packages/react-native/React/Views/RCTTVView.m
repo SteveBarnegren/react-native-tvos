@@ -306,7 +306,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
     return;
   }
 
-  if (_autoFocus && context.previouslyFocusedItem != nil && [context.previouslyFocusedView isDescendantOfView:self]) {
+  if ((_autoFocus || _preserveFocusOnScreenChange) && [context.previouslyFocusedView isDescendantOfView:self]) {
     // Whenever focus leaves the container, `nextFocusedView` is the destination, the item outside the container.
     // So, `previouslyFocusedItem` is always the last focused child of `TVFocusGuide`.
     // We should update `preferredFocusEnvironments` in this case to make sure `FocusGuide` remembers
@@ -531,7 +531,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
   // `destinations` should always be favored against `autoFocus` feature, if provided.
   if (focusDestinations != nil) {
     [self addFocusGuide:focusDestinations];
-  } else if (_autoFocus && previouslyFocusedItem != nil) {
+  } else if ((_autoFocus || _preserveFocusOnScreenChange) && previouslyFocusedItem != nil) {
     // We also add `self` as the second option in case `previouslyFocusedItem` becomes unreachable (e.g gets detached).
     // `self` helps redirecting focus to the first focusable element in that case.
     [self addFocusGuide:@[previouslyFocusedItem, self]];
